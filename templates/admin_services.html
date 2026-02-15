@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin – Manage Services</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+
+
+
+
+<div class="container">
+    <h2>Manage Support Services</h2>
+
+    <a href="/admin/services/add">➕ Add New Service</a>
+
+    <table border="1" width="100%" cellpadding="8">
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Location</th>
+            <th>Contact</th>
+            <th>Action</th>
+        </tr>
+
+        {% for service in services %}
+        <tr>
+            <td>{{ service.name }}</td>
+            <td>{{ service.service_type }}</td>
+            <td>{{ service.location }}</td>
+            <td>{{ service.contact }}</td>
+            <td>
+                <a href="/admin/services/edit/{{ service.service_id }}">Edit</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Service</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+
+
+
+
+
+<div class="container">
+    <h2>Edit Support Service</h2>
+
+    <form method="POST">
+        <label>Name</label>
+        <input type="text" name="name" value="{{ service.name }}" required>
+
+        <label>Service Type</label>
+        <select name="service_type">
+            {% for t in ['hospital','shelter','counseling','police','legal','education'] %}
+            <option value="{{ t }}" {% if service.service_type == t %}selected{% endif %}>
+                {{ t|capitalize }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <label>Location</label>
+        <input type="text" name="location" value="{{ service.location }}" required>
+
+        <label>Contact</label>
+        <input type="text" name="contact" value="{{ service.contact }}" required>
+
+        <button type="submit">Update Service</button>
+    </form>
+</div>
+
+
+</body>
+</html>

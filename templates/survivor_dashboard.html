@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Survivor Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 22px;
+        }
+
+        .container {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transition: 0.3s;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .card h3 {
+            margin-bottom: 15px;
+        }
+
+        .card a {
+            text-decoration: none;
+            color: white;
+            background: #667eea;
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+        .card a:hover {
+            background: #5a67d8;
+        }
+
+        .panic {
+            background: #ff4d4d !important;
+        }
+
+        .safe-exit {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: black;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    Survivor Support Dashboard
+</div>
+
+<div class="container">
+
+    <div class="card">
+        <h3>📝 Report Abuse</h3>
+        <p>Submit a confidential report.</p>
+        <a href="/report">Start Report</a>
+    </div>
+
+    <div class="card">
+        <h3>🔎 Track My Case</h3>
+        <p>Check status using your reference ID.</p>
+        <a href="/track">Track Case</a>
+    </div>
+
+    <div class="card">
+        <h3>📍 Find Help Near You</h3>
+        <p>Locate nearby support services.</p>
+        <a href="/map">View Map</a>
+    </div>
+
+    <div class="card">
+        <h3>🚨 Emergency Help</h3>
+        <p>If you are in immediate danger.</p>
+        <a href="/panic" class="panic">Panic Button</a>
+    </div>
+
+</div>
+
+<!-- Safe Exit -->
+<a href="https://www.google.com" class="safe-exit">Safe Exit</a>
+
+</body>
+</html>

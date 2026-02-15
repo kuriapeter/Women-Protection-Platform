@@ -1,0 +1,84 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Admin Dashboard - Reports{% endblock %}
+{% block breadcrumb %}Reports{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <h2>Admin Dashboard</h2>
+    <p>Anonymized abuse reports (highest priority first)</p>
+
+    <table width="100%" cellpadding="8" style="border-collapse: collapse;">
+        <tr>
+            <th>ID</th>
+            <th>Reference ID</th>
+            <th>Abuse Type</th>
+            <th>Urgency</th>
+            <th>Priority</th>
+            <th>Score</th>
+            <th>Location</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Update</th>
+            <th>View</th>
+        </tr>
+
+        {% for report in reports %}
+        <tr>
+            <td>{{ report.report_id }}</td>
+            <td><strong>{{ report.reference_id }}</strong></td>
+            <td>{{ report.abuse_type }}</td>
+            <td>{{ report.severity_level }}</td>
+            <td>
+                <strong style="
+                    color:
+                    {% if report.priority_level == 'Critical' %}red
+                    {% elif report.priority_level == 'High' %}orange
+                    {% elif report.priority_level == 'Moderate' %}blue
+                    {% else %}green
+                    {% endif %}
+                ">
+                    {{ report.priority_level }}
+                </strong>
+            </td>
+            <td>{{ report.severity_score }}</td>
+            <td>{{ report.location or "Not provided" }}</td>
+            <td>{{ report.created_at }}</td>
+            <td>
+                <strong style="
+                    color:
+                    {% if report.status == 'Pending' %}gray
+                    {% elif report.status == 'Under Review' %}blue
+                    {% elif report.status == 'Escalated' %}orange
+                    {% elif report.status == 'Resolved' %}green
+                    {% elif report.status == 'Closed' %}black
+                    {% endif %}
+                ">
+                    {{ report.status }}
+                </strong>
+            </td>
+            <td>
+                <form method="POST" action="/admin/update_status/{{ report.report_id }}">
+                    <select name="status">
+                        <option {% if report.status == 'Pending' %}selected{% endif %}>Pending</option>
+                        <option {% if report.status == 'Under Review' %}selected{% endif %}>Under Review</option>
+                        <option {% if report.status == 'Escalated' %}selected{% endif %}>Escalated</option>
+                        <option {% if report.status == 'Referred' %}selected{% endif %}>Referred</option>
+                        <option {% if report.status == 'Resolved' %}selected{% endif %}>Resolved</option>
+                        <option {% if report.status == 'Closed' %}selected{% endif %}>Closed</option>
+                    </select>
+                    <button type="submit">Save</button>
+                </form>
+            </td>
+            <td>
+                <a href="/admin/report/{{ report.report_id }}">
+                    <button>View</button>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}

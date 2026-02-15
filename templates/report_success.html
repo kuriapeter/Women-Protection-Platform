@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report Submitted</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            padding: 50px;
+            background: #f4f6f9;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            display: inline-block;
+        }
+
+        .ref-id {
+            font-size: 20px;
+            color: #764ba2;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background: #667eea;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Your Report Has Been Submitted</h2>
+
+    <p>Please save this reference ID to track your case:</p>
+
+    <div class="ref-id">
+        {{ reference_id }}
+    </div>
+
+    <p>You can use this ID to check your case status anytime.</p>
+
+    <a href="/track">
+        <button>Track My Case</button>
+    </a>
+</div>
+
+</body>
+</html>

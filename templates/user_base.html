@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Support Platform{% endblock %}</title>
+
+    <style>
+        :root {
+            --primary: #5fa8a6;
+            --secondary: #d8f3dc;
+            --text-dark: #2f3e46;
+            --neutral-bg: #f6f9f8;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--neutral-bg);
+            transition: 0.4s ease;
+        }
+
+        /* Discreet Mode */
+        body.discreet {
+            background: #f4f4f4;
+        }
+
+        body.discreet .brand {
+            content: "Wellness Portal";
+        }
+
+        .topbar {
+            background: var(--primary);
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            font-size: 14px;
+        }
+
+        .topbar a:hover {
+            opacity: 0.8;
+        }
+
+        .breadcrumb {
+            padding: 15px 30px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .breadcrumb span {
+            color: var(--primary);
+        }
+
+        .content {
+            padding: 40px;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .safe-exit {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: black;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        select {
+            padding: 5px;
+            border-radius: 6px;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="topbar">
+    <div class="brand"><strong id="brandText">Survivor Support</strong></div>
+
+    <div class="controls">
+        <select id="languageSwitcher">
+            <option value="en">English</option>
+            <option value="sw">Swahili</option>
+        </select>
+
+        <button onclick="toggleDiscreet()" class="btn" style="padding:6px 12px;">Discreet Mode</button>
+
+        <a href="/dashboard">Dashboard</a>
+        <a href="/report" class="translatable" data-en="Report" data-sw="Ripoti">Report</a>
+        <a href="/track" class="translatable" data-en="Track" data-sw="Fuatilia">Track</a>
+        <a href="/resources" class="translatable" data-en="Resources" data-sw="Rasilimali">Resources</a>
+        <a href="/services" class="translatable" data-en="Services" data-sw="Huduma">Services</a>
+    </div>
+</div>
+
+<div class="breadcrumb">
+    Dashboard / <span>{% block breadcrumb %}{% endblock %}</span>
+</div>
+
+<div class="content">
+    {% block content %}{% endblock %}
+</div>
+
+<a href="https://www.google.com" class="safe-exit">Safe Exit</a>
+
+<script>
+function toggleDiscreet() {
+    document.body.classList.toggle("discreet");
+    const brand = document.getElementById("brandText");
+
+    if (document.body.classList.contains("discreet")) {
+        brand.innerText = "Wellness Portal";
+    } else {
+        brand.innerText = "Survivor Support";
+    }
+}
+
+document.getElementById("languageSwitcher").addEventListener("change", function() {
+    const lang = this.value;
+    const elements = document.querySelectorAll(".translatable");
+
+    elements.forEach(el => {
+        if (lang === "sw") {
+            el.innerText = el.getAttribute("data-sw");
+        } else {
+            el.innerText = el.getAttribute("data-en");
+        }
+    });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Report Details{% endblock %}
+{% block breadcrumb %}Report Details{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <h2>Report {{ report.reference_id }}</h2>
+
+    <p><strong>Abuse Type:</strong> {{ report.abuse_type }}</p>
+    <p><strong>Priority:</strong> {{ report.priority_level }}</p>
+    <p><strong>Status:</strong> {{ report.status }}</p>
+    <p><strong>Description:</strong> {{ report.description }}</p>
+</div>
+
+<div class="card">
+    <h3>Status Timeline</h3>
+
+    {% if history %}
+        <ul style="list-style:none; padding:0;">
+            {% for item in history %}
+            <li style="margin-bottom:15px; padding:10px; background:#f4f6f9; border-radius:8px;">
+                <strong>{{ item.changed_at }}</strong><br>
+                {{ item.old_status }} → <strong>{{ item.new_status }}</strong>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No status changes recorded.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

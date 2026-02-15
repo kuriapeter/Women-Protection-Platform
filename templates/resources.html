@@ -1,0 +1,67 @@
+{% extends "user_base.html" %}
+
+{% block title %}Resources{% endblock %}
+{% block breadcrumb %}Resources{% endblock %}
+
+{% block content %}
+
+<h2 style="color: var(--primary); margin-bottom: 25px;">
+    Support Resources
+</h2>
+
+<div class="resource-grid">
+
+    <div class="resource-card">
+        <h3>📞 Emergency Contacts</h3>
+        <p>If you are in immediate danger, call your local emergency services.</p>
+    </div>
+
+    <div class="resource-card">
+        <h3>🏠 Shelters</h3>
+        <p>Find safe spaces offering temporary protection and housing.</p>
+    </div>
+
+    <div class="resource-card">
+        <h3>⚖ Legal Assistance</h3>
+        <p>Access free or affordable legal support services.</p>
+    </div>
+
+    <div class="resource-card">
+        <h3>🧠 Counseling</h3>
+        <p>Connect with trauma-informed counselors and therapists.</p>
+    </div>
+
+</div>
+
+<style>
+.resource-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.resource-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.resource-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+}
+
+.resource-card h3 {
+    margin-bottom: 10px;
+    color: var(--primary);
+}
+
+.resource-card p {
+    font-size: 14px;
+    color: #555;
+}
+</style>
+
+{% endblock %}

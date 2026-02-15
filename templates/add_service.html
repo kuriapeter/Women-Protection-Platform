@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Service</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+
+    <nav style="margin-bottom:20px;">
+    <a href="/">Home</a> |
+    <a href="/report">Report Abuse</a> |
+    <a href="/resources">Support Resources</a>
+</nav>
+
+
+<div class="container">
+    <h2>Add Support Service</h2>
+
+    <form method="POST">
+        <label>Name</label>
+        <input type="text" name="name" required>
+
+        <label>Service Type</label>
+        <select name="service_type" required>
+            <option value="hospital">Hospital</option>
+            <option value="shelter">Shelter</option>
+            <option value="counseling">Counseling</option>
+            <option value="police">Police</option>
+            <option value="legal">Legal Aid</option>
+            <option value="education">Education</option>
+        </select>
+
+        <label>Location</label>
+        <input type="text" name="location" required>
+
+        <label>Contact</label>
+        <input type="text" name="contact" required>
+
+        <button type="submit">Save Service</button>
+    </form>
+</div>
+<footer style="margin-top:30px; font-size:12px; color:#777;">
+    This platform is designed to provide support resources and does not replace emergency services.
+</footer>
+
+</body>
+</html>
