@@ -1,34 +1,171 @@
 {% extends "user_base.html" %}
-{% block title %}Support Resources{% endblock %}
+
+{% block title %}Services{% endblock %}
+{% block breadcrumb %}Services{% endblock %}
 
 {% block content %}
 
-<nav style="margin-bottom:20px;">
-    <a href="/">Home</a> |
-    <a href="/report">Report Abuse</a> |
-    <a href="/resources">Support Resources</a>
-</nav>
+<h2 style="color: var(--primary); margin-bottom: 20px;">
+    Find Support Services Near You
+</h2>
 
+<form method="GET" class="filter-box">
+    <select name="type">
+        <option value="">All Service Types</option>
+        <option>Shelter</option>
+        <option>Legal Aid</option>
+        <option>Counseling</option>
+        <option>Police</option>
+    </select>
 
+    <input type="text" name="location" placeholder="Enter location">
 
-<h2>Recommended Support ({{ priority }} Priority)</h2>
+    <button type="submit" class="btn">Filter</button>
+</form>
 
-<p>You deserve support. These services may help:</p>
+<div class="services-layout">
 
-<ul>
+    <div class="service-list">
+        {% for service in services %}
+        <div class="service-card">
+            <h3>{{ service.name }}</h3>
+            <p><strong>Type:</strong> {{ service.service_type }}</p>
+            <p><strong>Location:</strong> {{ service.location }}</p>
+            <p><strong>Contact:</strong> {{ service.contact }}</p>
+
+             {% if service.distance %}
+             <p class="distance-badge">
+                    <strong>Distance:</strong> {{ service.distance }} km away</p>
+             {% endif %}
+
+        </div>
+        {% else %}
+        <p>No services found.</p>
+        {% endfor %}
+    </div>
+
+    <div id="map"></div>
+
+</div>
+
+<style>
+.filter-box {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.filter-box input, .filter-box select {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.services-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.service-list {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.service-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.07);
+    margin-bottom: 15px;
+    transition: 0.3s;
+}
+
+.service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+}
+
+#map {
+    height: 500px;
+    border-radius: 15px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+</style>
+
+<!-- Leaflet Map -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+
+<script>
+var map = L.map('map').setView([-1.286389, 36.817223], 10);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+// Marker cluster group
+var markers = L.markerClusterGroup();
+
+// Service type colors
+function getIcon(type) {
+    let color = "blue";
+    if (type === "Shelter") color = "green";
+    if (type === "Legal Aid") color = "orange";
+    if (type === "Counseling") color = "purple";
+    if (type === "Police") color = "red";
+
+    return L.icon({
+        iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
+        shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41]
+    });
+}
+
+// Add service markers
 {% for service in services %}
-    <li>
-        <strong>{{ service.name }}</strong><br>
-        {{ service.location }}<br>
-        📞 {{ service.contact }}
-    </li>
+    {% if service.latitude and service.longitude %}
+        var marker = L.marker(
+            [{{ service.latitude }}, {{ service.longitude }}],
+            {icon: getIcon("{{ service.service_type }}")}
+        ).bindPopup(`
+            <strong>{{ service.name }}</strong><br>
+            {{ service.location }}<br>
+            {% if service.distance %}
+                <strong>{{ service.distance }} km away</strong>
+            {% endif %}
+        `);
+
+        markers.addLayer(marker);
+    {% endif %}
 {% endfor %}
-</ul>
+
+map.addLayer(markers);
+
+// Auto-detect location
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+        var lat = position.coords.latitude;
+        var lng = position.coords.longitude;
+
+        L.marker([lat, lng]).addTo(map)
+            .bindPopup("Your Location")
+            .openPopup();
+
+        map.setView([lat, lng], 12);
+
+        // Reload page with coordinates
+        if (!window.location.search.includes("lat=")) {
+            window.location.href = `/services?lat=${lat}&lng=${lng}`;
+        }
+    });
+}
+</script>
 
 
-
-
-<footer style="margin-top:30px; font-size:12px; color:#777;">
-    This platform is designed to provide support resources and does not replace emergency services.
-</footer>
 {% endblock %}

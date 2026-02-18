@@ -3,10 +3,26 @@ import string
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import check_password_hash
-from db import get_db_connection
-
+from db import get_db_connection, get_services
+from math import radians, cos, sin, atan2, sqrt, ceil
 app = Flask(__name__)
 app.secret_key = "I love coding" 
+
+def calculate_distance(lat1, lon1, lat2, lon2):
+    R = 6371  # Earth radius in kilometers
+    dlat = radians(lat2 - lat1)
+    dlon = radians(lon2 - lon1)
+    a = sin(dlat / 2) ** 2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon / 2) ** 2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    return R * c
+
+
+@app.route('/services')
+def services_view():
+    services = get_services()  # Fetch services from the database
+    print(services)  # Print the services to the console for debugging
+    return render_template('services.html', services=services)
+
 
 
 @app.route('/dashboard')
@@ -433,6 +449,48 @@ def admin_api_analytics():
     }
 
 
+
+@app.route('/services')
+def services():
+    user_lat = request.args.get('lat', type=float)
+    user_lng = request.args.get('lng', type=float)
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM services")
+    services = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    # Calculate distances if user location available
+    if user_lat is not None and user_lng is not None:
+        for service in services:
+            if service['latitude'] is not None and service['longitude'] is not None:
+                service['distance'] = calculate_distance(
+                    user_lat, user_lng,
+                    service['latitude'], service['longitude']
+                )
+            else:
+                service['distance'] = None
+
+        # Sort by nearest
+        services = sorted(
+            services,
+            key=lambda x: x['distance'] if x['distance'] is not None else 99999
+        )
+    else:
+        # if no location provided, diststance should be None
+        for service in services:
+            service['distance'] = None
+
+    return render_template(
+        "services.html",
+        services=services
+    )
+
+
 @app.route('/track', methods=['GET', 'POST'])
 def track_case():
     result = None
@@ -454,6 +512,88 @@ def track_case():
         conn.close()
 
     return render_template("track_case.html", result=result)
+
+
+
+
+@app.route('/stories', methods=['GET', 'POST'])
+def stories():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Insert new story
+    if request.method == 'POST':
+        import html
+        title = html.escape(request.form.get('title'))
+        content = html.escape(request.form.get('content'))
+
+        cursor.execute(
+            "INSERT INTO stories (title, content, status) VALUES (%s, %s, 'Pending')",
+            (title, content)
+        )
+        conn.commit()
+
+    # Pagination logic
+    page = request.args.get('page', 1, type=int)
+    per_page = 5
+    offset = (page - 1) * per_page
+
+    cursor.execute("SELECT COUNT(*) as total FROM stories WHERE status='Approved'")
+    total_stories = cursor.fetchone()['total']
+    total_pages = ceil(total_stories / per_page)
+
+    cursor.execute("""
+        SELECT * FROM stories
+        WHERE status='Approved'
+        ORDER BY created_at DESC
+        LIMIT %s OFFSET %s
+    """, (per_page, offset))
+
+    stories = cursor.fetchall()
+
+    # Featured Story (random approved story)
+    cursor.execute("""
+        SELECT * FROM stories
+        WHERE status='Approved'
+        ORDER BY RAND()
+        LIMIT 1
+    """)
+    featured_story = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        'stories.html',
+        stories=stories,
+        page=page,
+        total_pages=total_pages,
+        featured_story=featured_story
+    )
+
+
+
+
+
+
+
+
+
+@app.route('/admin/update_story/<int:story_id>/<status>')
+def update_story(story_id, status):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "UPDATE stories SET status=%s WHERE story_id=%s",
+        (status, story_id)
+    )
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return redirect('/admin/stories')
 
 
 @app.route('/admin/analytics')

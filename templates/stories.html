@@ -1,18 +1,344 @@
 {% extends "user_base.html" %}
-{% block title %}Support Resources{% endblock %}
+
+{% block title %}Community Stories{% endblock %}
+{% block breadcrumb %}Stories{% endblock %}
 
 {% block content %}
-<nav style="margin-bottom:20px;">
-    <a href="/">Home</a> |
-    <a href="/report">Report Abuse</a> |
-    <a href="/resources">Support Resources</a>
-</nav>
+
+<div class="ambient-background">
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="glow glow-3"></div>
+</div>
+<div class="grain-overlay"></div>
+
+
+<div class="parallax-bg"></div>
+
+<h2 class="story-title">Share Your Story (Anonymous & Safe)</h2>
+<p class="story-intro">You are not alone. Share your experience safely and anonymously.</p>
+
+<div class="story-form">
+    <form method="POST">
+        <input type="text" name="title" placeholder="Optional Title">
+        <textarea name="content" placeholder="Write your story here..." required></textarea>
+        <button type="submit" class="btn">Submit Story</button>
+    </form>
+</div>
+
+<div class="trigger-warning">
+    ⚠️ Some stories may contain sensitive experiences. Please read only if you feel emotionally safe.
+</div>
+
+<hr class="divider">
+
+<h3>Community Stories</h3>
+
+{% if featured_story %}
+<div class="featured-story">
+    <h3>🌟 Featured Story of the Day</h3>
+    {% if featured_story.title %}
+        <h4>{{ featured_story.title }}</h4>
+    {% endif %}
+    <p>{{ featured_story.content }}</p>
+    <small>Shared anonymously</small>
+</div>
+{% endif %}
+
+<div class="pagination">
+    {% if page > 1 %}
+        <a href="?page={{ page - 1 }}" class="page-btn">Previous</a>
+    {% endif %}
+    <span>Page {{ page }} of {{ total_pages }}</span>
+    {% if page < total_pages %}
+        <a href="?page={{ page + 1 }}" class="page-btn">Next</a>
+    {% endif %}
+</div>
+
+{% if stories %}
+    {% for story in stories %}
+    <div class="story-card">
+        <h4>{{ story.title }}</h4>
+        <p>{{ story.content }}</p>
+        <small>Shared anonymously</small>
+    </div>
+    {% endfor %}
+{% else %}
+    <p>No stories shared yet. Be the first.</p>
+{% endif %}
+</div>
+
+<style>
+    .story-title {
+        color: var(--primary);
+        margin-bottom: 15px;
+    }
+
+    .story-intro {
+        color: #666;
+        margin-bottom: 25px;
+    }
+
+    .story-form {
+        margin-bottom: 20px;
+    }
+
+    .story-form textarea {
+        width: 100%;
+        height: 120px;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        resize: none;
+        margin-bottom: 15px;
+    }
+
+    .story-form input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+    }
+
+    /* Subtle Grain Texture */
+.grain-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.05;
+
+    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+    mix-blend-mode: multiply;
+}
+.glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.5;
+    transition: filter 0.4s ease;
+}
+
+
+    /* Ambient Background Container */
+.ambient-background {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+/* Floating Glow Elements */
+.glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.5;
+    animation: float 18s ease-in-out infinite;
+}
+
+/* Individual Glow Colors */
+.glow-1 {
+    width: 500px;
+    height: 500px;
+    background: #e6f4f4;
+    top: 10%;
+    left: 5%;
+    animation-delay: 0s;
+}
+
+.glow-2 {
+    width: 400px;
+    height: 400px;
+    background: #f0f9f9;
+    bottom: 10%;
+    right: 10%;
+    animation-delay: 6s;
+}
+
+.glow-3 {
+    width: 450px;
+    height: 450px;
+    background: #eef6f6;
+    top: 50%;
+    left: 60%;
+    animation-delay: 12s;
+}
+
+/* Gentle Floating Motion */
+@keyframes float {
+    0%   { transform: translateY(0px) translateX(0px); }
+    50%  { transform: translateY(-30px) translateX(20px); }
+    100% { transform: translateY(0px) translateX(0px); }
+}
+
+
+    .btn {
+        background-color: var(--primary);
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        opacity: 0.85;
+    }
+
+    .trigger-warning {
+        background: #fff4e6;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+    .divider {
+        margin: 40px 0;
+    }
+
+    .story-card {
+        background: #fdfefe;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+        margin-bottom: 15px;
+        animation: fadeIn 0.5s ease;
+        border-left: 5px solid var(--primary);
+    }
+
+    .pagination {
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .page-btn {
+        padding: 8px 15px;
+        border-radius: 8px;
+        background: var(--primary);
+        color: white;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    .page-btn:hover {
+        opacity: 0.85;
+    }
+
+    .featured-story {
+        background: linear-gradient(135deg, #eef6f6, #ffffff);
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 35px;
+        border-left: 6px solid var(--primary);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+    .story-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+
+    opacity: 0;
+    transform: translateY(25px);
+    transition: all 0.8s ease;
+}
+
+/* When visible */
+.story-card.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Featured story animation */
+.featured-story {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.9s ease;
+}
+
+.featured-story.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+/* Parallax Background Layer */
+.parallax-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    z-index: -1;
+
+    background: radial-gradient(circle at 20% 30%, #eef6f6 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, #f0f9f9 0%, transparent 50%),
+            #ffffff;
+
+
+    transform: translateY(0);
+    transition: transform 0.1s ease-out;
+}
+
+
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(10px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("show");
+            }
+        });
+    }, {
+        threshold: 0.15
+    });
+
+    document.querySelectorAll(".story-card, .featured-story")
+        .forEach(el => observer.observe(el));
+
+});
+</script>
+
+<script>
+window.addEventListener("scroll", function() {
+    const scrollY = window.scrollY;
+    const bg = document.querySelector(".parallax-bg");
+
+    // Very subtle movement (slow)
+    bg.style.transform = `translateY(${scrollY * 0.08
+}px)`;
+});
+</script>
+
+<script>
+window.addEventListener("scroll", function() {
+    const scrollY = window.scrollY;
+    const glows = document.querySelectorAll(".glow");
+
+    // Calculate subtle blur change
+    const dynamicBlur = 120 + (scrollY * 0.05);
+
+    glows.forEach(glow => {
+        glow.style.filter = `blur(${dynamicBlur}px)`;
+    });
+});
+</script>
 
 
 
 
-
-<footer style="margin-top:30px; font-size:12px; color:#777;">
-    This platform is designed to provide support resources and does not replace emergency services.
-</footer>
 {% endblock %}

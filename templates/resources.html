@@ -1,38 +1,52 @@
-{% extends "user_base.html" %}
-
-{% block title %}Resources{% endblock %}
-{% block breadcrumb %}Resources{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Support Resources</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
 
 {% block content %}
+<div class="container">
+    <h2>Nearby Support Resources</h2>
+    <p>Select the type of support you need.</p>
 
-<h2 style="color: var(--primary); margin-bottom: 25px;">
-    Support Resources
-</h2>
-
-<div class="resource-grid">
-
-    <div class="resource-card">
-        <h3>📞 Emergency Contacts</h3>
-        <p>If you are in immediate danger, call your local emergency services.</p>
+    <!-- FILTERS -->
+    <div class="filters">
+        <a href="/resources">All</a>
+        <a href="/resources?type=hospital">Hospitals</a>
+        <a href="/resources?type=shelter">Shelters</a>
+        <a href="/resources?type=counseling">Counseling</a>
+        <a href="/resources?type=police">Police</a>
+        <a href="/resources?type=legal">Legal Aid</a>
     </div>
 
-    <div class="resource-card">
-        <h3>🏠 Shelters</h3>
-        <p>Find safe spaces offering temporary protection and housing.</p>
-    </div>
+    <hr>
 
-    <div class="resource-card">
-        <h3>⚖ Legal Assistance</h3>
-        <p>Access free or affordable legal support services.</p>
-    </div>
+    <!-- SERVICES LIST -->
+    {% for service in services %}
+    <div class="service-card">
+        <h3>{{ service.name }}</h3>
+        <p><strong>Type:</strong> {{ service.service_type }}</p>
+        <p><strong>Location:</strong> {{ service.location }}</p>
+        <p><strong>Contact:</strong> {{ service.contact }}</p>
 
-    <div class="resource-card">
-        <h3>🧠 Counseling</h3>
-        <p>Connect with trauma-informed counselors and therapists.</p>
+        <!-- EMBED MAP -->
+        <iframe
+            width="100%"
+            height="200"
+            frameborder="0"
+            style="border:0"
+            src="https://www.google.com/maps?q={{ service.location | urlencode }}&output=embed"
+            allowfullscreen>
+        </iframe>
     </div>
-
+    {% else %}
+        <p>No services found for this category.</p>
+    {% endfor %}
 </div>
-
+{% endblock %}
 <style>
 .resource-grid {
     display: grid;
@@ -64,4 +78,31 @@
 }
 </style>
 
-{% endblock %}
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
