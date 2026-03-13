@@ -1,0 +1,58 @@
+{% extends "user_base.html" %}
+{% block title %}Emergency Help{% endblock %}
+{% block breadcrumb %}Panic Button{% endblock %}
+{% block content %}
+<style>
+body{
+    font-family: Arial;
+    text-align:center;
+    background:#fff5f5;
+}
+
+h1{
+    color:red;
+}
+
+.panic-actions{
+    margin-top:30px;
+}
+
+button{
+    padding:15px 25px;
+    margin:10px;
+    font-size:18px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.call{
+    background:red;
+    color:white;
+}
+
+.map{
+    background:#3498db;
+    color:white;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🚨 Emergency Help</h1>
+<p>If you are in immediate danger please contact emergency services.</p>
+
+<div class="panic-actions">
+
+<a href="tel:999">
+<button class="call">Call Police (999)</button>
+</a>
+
+<a href="/map">
+<button class="map">Find Nearest Help</button>
+</a>
+
+</div>
+
+{% endblock %}

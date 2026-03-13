@@ -1,5 +1,6 @@
 import random
 import string
+
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import check_password_hash
@@ -24,15 +25,36 @@ def services_view():
     return render_template('services.html', services=services)
 
 
+@app.route('/panic')
+def panic():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM services")
+    services = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('panic.html', services=services)
+
+@app.route('/map')
+def map_page():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    #filter services with valid lat/lng
+    service_types = ("hospital", "shelter", "police", "counseling", "legal", "education")
+    placeholders = ', '.join(['%s'] * len(service_types))
+    cursor.execute(f"SELECT * FROM services WHERE latitude IS NOT NULL AND longitude IS NOT NULL AND service_type IN ({placeholders})", service_types)
+    services = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template('map.html', services=services)
 
 @app.route('/dashboard')
 def survivor_dashboard():
     return render_template("survivor_dashboard.html")
 
-# ---------------- HOME ----------------
-@app.route('/')
-def home():
-    return render_template('index.html')
 
 def generate_reference_id():
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -594,6 +616,11 @@ def update_story(story_id, status):
     conn.close()
 
     return redirect('/admin/stories')
+
+
+@app.route('/map')
+def map():
+    return render_template('map.html')
 
 
 @app.route('/admin/analytics')

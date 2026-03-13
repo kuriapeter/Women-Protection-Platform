@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin – Manage Services</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+{% extends "admin_base.html" %}
 
+{% block title %}Admin Dashboard - Reports{% endblock %}
+{% block breadcrumb %}Reports{% endblock %}
 
-
+{% block content %}
 
 
 <div class="container">
@@ -38,5 +34,4 @@
     </table>
 </div>
 
-</body>
-</html>
+{% endblock %}

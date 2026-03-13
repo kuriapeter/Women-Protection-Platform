@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Support Resources</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+{% extends "user_base.html" %}
+
+{% block title %}Report Abuse{% endblock %}
+{% block breadcrumb %}Report{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -46,7 +42,7 @@
         <p>No services found for this category.</p>
     {% endfor %}
 </div>
-{% endblock %}
+
 <style>
 .resource-grid {
     display: grid;
@@ -77,11 +73,7 @@
     color: #555;
 }
 </style>
-
-
-</body>
-</html>
-
+{% endblock %}
 
 
 

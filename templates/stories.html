@@ -47,11 +47,19 @@
 
 <div class="pagination">
     {% if page > 1 %}
-        <a href="?page={{ page - 1 }}" class="page-btn">Previous</a>
+        <a href="?page=1" class="page-btn">First</a>
+        <a href="?page={{ page-1}}" class="page-btn">> Prev</a>
     {% endif %}
-    <span>Page {{ page }} of {{ total_pages }}</span>
+    {% for p in range(1, total_pages + 1) %}
+        {% if p == page %}
+            <span class="current-page" style="background: var(--primary-dark);">{{ p }}</span>
+        {% else %}
+            <a href="?page={{ p }}" class="page-btn">{{ p }}</a>
+        {% endif %}
+    {% endfor %}
     {% if page < total_pages %}
-        <a href="?page={{ page + 1 }}" class="page-btn">Next</a>
+        <a href="?page={{ page+1 }}" class="page-btn">Next ></a>
+        <a href="?page={{ total_pages }}" class="page-btn">Last</a>
     {% endif %}
 </div>
 
@@ -211,27 +219,37 @@
         border-left: 5px solid var(--primary);
     }
 
-    .pagination {
-        margin-top: 30px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 20px;
-    }
+.pagination{
+    margin-top:40px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+}
 
-    .page-btn {
-        padding: 8px 15px;
-        border-radius: 8px;
-        background: var(--primary);
-        color: white;
-        text-decoration: none;
-        transition: 0.3s;
-    }
+.page-btn{
+    padding:8px 14px;
+    border-radius:8px;
+    background:#f2f2f2;
+    text-decoration:none;
+    color:#333;
+    font-weight:500;
+    transition:0.25s;
+}
 
-    .page-btn:hover {
-        opacity: 0.85;
-    }
+.page-btn:hover{
+    background:#3498db;
+    color:white;
+}
 
+.current-page{
+    padding:8px 14px;
+    border-radius:8px;
+    background:#3498db;
+    color:white;
+    font-weight:bold;
+}
     .featured-story {
         background: linear-gradient(135deg, #eef6f6, #ffffff);
         padding: 25px;
