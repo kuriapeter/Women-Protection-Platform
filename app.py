@@ -1,5 +1,6 @@
 import random
 import string
+from flask import Flask, send_from_directory
 
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session
@@ -23,7 +24,9 @@ def services_view():
     services = get_services()  # Fetch services from the database
     print(services)  # Print the services to the console for debugging
     return render_template('services.html', services=services)
-
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory('static', 'favicon.ico')
 
 @app.route('/panic')
 def panic():
